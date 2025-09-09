@@ -1,0 +1,23 @@
+.sidebar-icon {
+	font-size: 20px; /* Ukuran icon sesuai kebutuhan */
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	vertical-align: middle; /* Ini penting! */
+}
+.sidebar-link {
+	display: flex;
+	align-items: center;
+	text-decoration: none;
+	color: inherit;
+	line-height: 1.5;
+	gap: 6px;
+	padding: 6px 10px;
+}
+
+.sidebar-text {
+	font-size: 12px;
+	white-space: nowrap; /* <-- Ini mencegah teks turun ke bawah */
+	overflow: hidden;
+	text-overflow: ellipsis; /* Kalau terlalu panjang, akan jadi "..." */
+}
