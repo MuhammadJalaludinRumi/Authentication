@@ -91,7 +91,7 @@ class Admin extends CI_Controller
         $this->load->view('templates/header', $data);
         $this->load->view('templates/sidebar', $data);
         $this->load->view('templates/topbar', $data);
-        $this->load->view('admin/users', $data);
+        $this->load->view('admin/userManagement/users', $data);
     }
     
     public function addUser()
@@ -109,7 +109,7 @@ class Admin extends CI_Controller
             $this->load->view('templates/header', $data);
             $this->load->view('templates/sidebar', $data);
             $this->load->view('templates/topbar', $data);
-            $this->load->view('admin/add-user', $data);
+            $this->load->view('admin/userManagement/add-user', $data);
         } else {
             $insert = [
                 'name' => $this->input->post('name', true),
@@ -143,7 +143,7 @@ class Admin extends CI_Controller
             $this->load->view('templates/header', $data);
             $this->load->view('templates/sidebar', $data);
             $this->load->view('templates/topbar', $data);
-            $this->load->view('admin/edit-user', $data);
+            $this->load->view('admin/userManagement/edit-user', $data);
         } else {
             $update = [
                 'name' => $this->input->post('name', true),
