@@ -79,53 +79,6 @@ class Admin extends CI_Controller
          role="alert"> Access Changed!!</div>');
     }
 
-    public function addUser()
-    {
-        $data['title'] = 'Add User';
-        $data['user'] = $this->db->get_where('user', ['email' =>
-            $this->session->userdata('email')])->row_array();
-
-        $this->form_validation->set_rules('name', 'Name', 'required|trim');
-        $this->form_validation->set_rules('email', 'Email', 'required|trim|valid_email|is_unique[user.email]');
-        $this->form_validation->set_rules('password', 'Password', 'required|min_length[3]');
-
-        if ($this->form_validation->run() == false) {
-            $this->load->view('templates/header', $data);
-            $this->load->view('templates/sidebar', $data);
-            $this->load->view('templates/topbar', $data);
-            $this->load->view('admin/add-user', $data);
-        } else {
-            $insertData = [
-                'name' => $this->input->post('name'),
-                'email' => $this->input->post('email'),
-                'image' => 'default.jpg',
-                'password' => password_hash($this->input->post('password'), PASSWORD_DEFAULT),
-                'role_id' => $this->input->post('role_id'),
-                'is_active' => $this->input->post('is_active'),
-                'date_created' => time()
-            ];
-            $this->db->insert('user', $insertData);
-
-            $this->session->set_flashdata('message', '<div class="alert alert-success">New user added!</div>');
-            redirect('admin/users');
-        }
-    }
-
-    public function editUser($id)
-    {
-        // ambil data user
-        $data['edit_user'] = $this->db->get_where('user', ['id' => $id])->row_array();
-        // proses update sama seperti addUser
-    }
-
-    public function deleteUser($id)
-    {
-        $this->db->delete('user', ['id' => $id]);
-        $this->session->set_flashdata('message', '<div class="alert alert-success">User deleted!</div>');
-        redirect('admin/users');
-    }
-
-
     public function users()
     {
         $data['title'] = 'Manage Users';
@@ -139,6 +92,77 @@ class Admin extends CI_Controller
         $this->load->view('templates/sidebar', $data);
         $this->load->view('templates/topbar', $data);
         $this->load->view('admin/users', $data);
-    }    
+    }
+    
+    public function addUser()
+    {
+        $data['title'] = 'Add User';
+        $data['user'] = $this->db->get_where('user', [
+            'email' => $this->session->userdata('email')
+        ])->row_array();
+    
+        $this->form_validation->set_rules('name', 'Name', 'required|trim');
+        $this->form_validation->set_rules('email', 'Email', 'required|trim|valid_email|is_unique[user.email]');
+        $this->form_validation->set_rules('password', 'Password', 'required|min_length[3]');
+    
+        if ($this->form_validation->run() == false) {
+            $this->load->view('templates/header', $data);
+            $this->load->view('templates/sidebar', $data);
+            $this->load->view('templates/topbar', $data);
+            $this->load->view('admin/add-user', $data);
+        } else {
+            $insert = [
+                'name' => $this->input->post('name', true),
+                'email' => $this->input->post('email', true),
+                'image' => 'default.jpg',
+                'password' => password_hash($this->input->post('password'), PASSWORD_DEFAULT),
+                'role_id' => $this->input->post('role_id'),
+                'is_active' => $this->input->post('is_active'),
+                'date_created' => time()
+            ];
+            $this->db->insert('user', $insert);
+            $this->session->set_flashdata('message', '<div class="alert alert-success">User added successfully!</div>');
+            redirect('admin/users');
+        }
+    }
+    
+    public function editUser($id)
+    {
+        $data['title'] = 'Edit User';
+        $data['user'] = $this->db->get_where('user', [
+            'email' => $this->session->userdata('email')
+        ])->row_array();
+    
+        $data['edit_user'] = $this->db->get_where('user', ['id' => $id])->row_array();
+    
+        $this->form_validation->set_rules('name', 'Name', 'required|trim');
+        $this->form_validation->set_rules('role_id', 'Role', 'required');
+        $this->form_validation->set_rules('is_active', 'Status', 'required');
+    
+        if ($this->form_validation->run() == false) {
+            $this->load->view('templates/header', $data);
+            $this->load->view('templates/sidebar', $data);
+            $this->load->view('templates/topbar', $data);
+            $this->load->view('admin/edit-user', $data);
+        } else {
+            $update = [
+                'name' => $this->input->post('name', true),
+                'role_id' => $this->input->post('role_id'),
+                'is_active' => $this->input->post('is_active')
+            ];
+            $this->db->where('id', $id);
+            $this->db->update('user', $update);
+            $this->session->set_flashdata('message', '<div class="alert alert-success">User updated successfully!</div>');
+            redirect('admin/users');
+        }
+    }
+    
+    public function deleteUser($id)
+    {
+        $this->db->delete('user', ['id' => $id]);
+        $this->session->set_flashdata('message', '<div class="alert alert-success">User deleted successfully!</div>');
+        redirect('admin/users');
+    }
+      
 }
  
